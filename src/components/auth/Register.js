@@ -3,8 +3,10 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { Container, Row, Col, Card, Button, Alert } from 'react-bootstrap';
+import { FaUser, FaEnvelope, FaPhone, FaLock, FaIdCard } from 'react-icons/fa';
 import AuthController from '../../controllers/AuthController';
 import MainLayout from '../layout/MainLayout';
+import ParticlesBackground from './ParticlesBackground';
 import './Auth.css';
 
 const Register = () => {
@@ -75,11 +77,13 @@ const Register = () => {
   return (
     <MainLayout>
       <div className="auth-page register-page">
-        <Container className="my-5">
+        <ParticlesBackground />
+        
+        <Container className="auth-container">
           <Row className="justify-content-center">
-            <Col md={6}>
+            <Col xs={12} sm={10} md={8} lg={6} xl={5}>
               <Card className="auth-card">
-                <Card.Header as="h4" className="text-center">Đăng ký tài khoản</Card.Header>
+                <Card.Header as="h4">Đăng ký tài khoản</Card.Header>
                 <Card.Body>
                   {message && <Alert variant="success">{message}</Alert>}
                   {error && <Alert variant="danger">{error}</Alert>}
@@ -92,7 +96,10 @@ const Register = () => {
                     {({ isSubmitting }) => (
                       <Form>
                         <div className="form-group mb-3">
-                          <label htmlFor="name">Họ tên</label>
+                          <label htmlFor="name">
+                            <FaIdCard className="me-2" />
+                            Họ tên
+                          </label>
                           <Field
                             name="name"
                             type="text"
@@ -107,7 +114,10 @@ const Register = () => {
                         </div>
 
                         <div className="form-group mb-3">
-                          <label htmlFor="username">Tên đăng nhập</label>
+                          <label htmlFor="username">
+                            <FaUser className="me-2" />
+                            Tên đăng nhập
+                          </label>
                           <Field
                             name="username"
                             type="text"
@@ -122,7 +132,10 @@ const Register = () => {
                         </div>
 
                         <div className="form-group mb-3">
-                          <label htmlFor="email">Email</label>
+                          <label htmlFor="email">
+                            <FaEnvelope className="me-2" />
+                            Email
+                          </label>
                           <Field
                             name="email"
                             type="email"
@@ -137,7 +150,10 @@ const Register = () => {
                         </div>
 
                         <div className="form-group mb-3">
-                          <label htmlFor="phone">Số điện thoại</label>
+                          <label htmlFor="phone">
+                            <FaPhone className="me-2" />
+                            Số điện thoại
+                          </label>
                           <Field
                             name="phone"
                             type="text"
@@ -152,7 +168,10 @@ const Register = () => {
                         </div>
 
                         <div className="form-group mb-3">
-                          <label htmlFor="password">Mật khẩu</label>
+                          <label htmlFor="password">
+                            <FaLock className="me-2" />
+                            Mật khẩu
+                          </label>
                           <Field
                             name="password"
                             type="password"
@@ -166,8 +185,11 @@ const Register = () => {
                           />
                         </div>
 
-                        <div className="form-group mb-3">
-                          <label htmlFor="confirmPassword">Xác nhận mật khẩu</label>
+                        <div className="form-group mb-4">
+                          <label htmlFor="confirmPassword">
+                            <FaLock className="me-2" />
+                            Xác nhận mật khẩu
+                          </label>
                           <Field
                             name="confirmPassword"
                             type="password"
@@ -199,9 +221,9 @@ const Register = () => {
                     )}
                   </Formik>
                 </Card.Body>
-                <Card.Footer className="text-center">
+                <Card.Footer>
                   <div>
-                    Đã có tài khoản? <Link to="/login">Đăng nhập</Link>
+                    Đã có tài khoản? <Link to="/login">Đăng nhập ngay</Link>
                   </div>
                 </Card.Footer>
               </Card>

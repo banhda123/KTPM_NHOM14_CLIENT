@@ -3,8 +3,10 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { Container, Row, Col, Card, Button, Alert } from 'react-bootstrap';
+import { FaUser, FaLock } from 'react-icons/fa';
 import AuthController from '../../controllers/AuthController';
 import MainLayout from '../layout/MainLayout';
+import ParticlesBackground from './ParticlesBackground';
 import './Auth.css';
 
 const Login = () => {
@@ -43,11 +45,13 @@ const Login = () => {
   return (
     <MainLayout>
       <div className="auth-page login-page">
-        <Container className="my-5">
+        <ParticlesBackground />
+        
+        <Container className="auth-container">
           <Row className="justify-content-center">
-            <Col md={6}>
+            <Col xs={12} sm={10} md={8} lg={6} xl={5}>
               <Card className="auth-card">
-                <Card.Header as="h4" className="text-center">Đăng nhập</Card.Header>
+                <Card.Header as="h4">Đăng nhập</Card.Header>
                 <Card.Body>
                   {error && <Alert variant="danger">{error}</Alert>}
                   
@@ -58,8 +62,11 @@ const Login = () => {
                   >
                     {({ isSubmitting }) => (
                       <Form>
-                        <div className="form-group mb-3">
-                          <label htmlFor="email">Số điện thoại</label>
+                        <div className="form-group mb-4">
+                          <label htmlFor="email">
+                            <FaUser className="me-2" />
+                            Số điện thoại
+                          </label>
                           <Field
                             name="email"
                             type="text"
@@ -73,8 +80,14 @@ const Login = () => {
                           />
                         </div>
 
-                        <div className="form-group mb-3">
-                          <label htmlFor="password">Mật khẩu</label>
+                        <div className="form-group mb-4">
+                          <div className="d-flex justify-content-between align-items-center">
+                            <label htmlFor="password">
+                              <FaLock className="me-2" />
+                              Mật khẩu
+                            </label>
+                            <Link to="/forgot-password" className="forgot-password-link">Quên mật khẩu?</Link>
+                          </div>
                           <Field
                             name="password"
                             type="password"
@@ -88,13 +101,7 @@ const Login = () => {
                           />
                         </div>
 
-                        <div className="text-end mb-3">
-                          <Link to="/forgot-password" className="forgot-password-link">
-                            Quên mật khẩu?
-                          </Link>
-                        </div>
-
-                        <div className="form-group text-center">
+                        <div className="form-group text-center mt-4">
                           <Button
                             type="submit"
                             variant="primary"
@@ -112,9 +119,9 @@ const Login = () => {
                     )}
                   </Formik>
                 </Card.Body>
-                <Card.Footer className="text-center">
+                <Card.Footer>
                   <div>
-                    Bạn chưa có tài khoản? <Link to="/register">Đăng ký</Link>
+                    Chưa có tài khoản? <Link to="/register">Đăng ký ngay</Link>
                   </div>
                 </Card.Footer>
               </Card>
