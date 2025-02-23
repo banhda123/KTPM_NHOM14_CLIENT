@@ -3,10 +3,77 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Form, Button, Card, Carousel, Dropdown } from 'react-bootstrap';
 import './HomePage.css';
 import AuthController from '../../controllers/AuthController';
+import axios from 'axios';
 
 const HomePage = () => {
   // State for categories from backend
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState([
+    {
+      id: 1,
+      name: 'Bút viết',
+      icon: 'fas fa-pen',
+      slug: 'but-viet',
+      subcategories: []
+    },
+    {
+      id: 2,
+      name: 'Văn phòng phẩm',
+      icon: 'fas fa-paperclip',
+      slug: 'van-phong-pham',
+      subcategories: []
+    },
+    {
+      id: 3,
+      name: 'Dụng Cụ Học Tập',
+      icon: 'fas fa-ruler-combined',
+      slug: 'dung-cu-hoc-tap',
+      subcategories: []
+    },
+    {
+      id: 4,
+      name: 'Mỹ Thuật',
+      icon: 'fas fa-paint-brush',
+      slug: 'my-thuat',
+      subcategories: []
+    },
+    {
+      id: 5,
+      name: 'Giấy In',
+      icon: 'fas fa-copy',
+      slug: 'giay-in',
+      subcategories: []
+    },
+    {
+      id: 6,
+      name: 'Bút cao cấp',
+      icon: 'fas fa-pen-fancy',
+      slug: 'but-cao-cap',
+      subcategories: []
+    },
+    {
+      id: 7,
+      name: 'STEAM & DIY',
+      icon: 'fas fa-tools',
+      slug: 'steam-diy',
+      subcategories: []
+    },
+    {
+      id: 8,
+      name: 'Sách',
+      icon: 'fas fa-book',
+      slug: 'sach',
+      subcategories: []
+    },
+    {
+      id: 9,
+      name: 'Quà tặng - Lifestyle',
+      icon: 'fas fa-gift',
+      slug: 'qua-tang',
+      subcategories: []
+    }
+  ]);
+
+  const [activeCategory, setActiveCategory] = useState(null);
   const [loading, setLoading] = useState(true);
   const [currentUser, setCurrentUser] = useState(null);
   const navigate = useNavigate();
@@ -25,126 +92,48 @@ const HomePage = () => {
     navigate('/');
   };
 
+  const loadSubcategories = async (categorySlug) => {
+    try {
+      console.log('Loading subcategories for:', categorySlug);
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/v1/categories/sub/${categorySlug}`);
+      console.log('Subcategories data received:', response.data);
+      
+      setCategories(prevCategories => {
+        const newCategories = prevCategories.map(cat => {
+          if (cat.slug === categorySlug) {
+            console.log('Updating category:', cat.name, 'with subcategories:', response.data);
+            return {
+              ...cat,
+              subcategories: response.data
+            };
+          }
+          return cat;
+        });
+        console.log('New categories state:', newCategories);
+        return newCategories;
+      });
+    } catch (error) {
+      console.error('Error loading subcategories:', error.response ? error.response.data : error.message);
+    }
+  };
+
+  const handleCategoryHover = (category) => {
+    console.log('Category hovered:', category.name);
+    setActiveCategory(category);
+    if (category.subcategories.length === 0) {
+      loadSubcategories(category.slug);
+    } else {
+      console.log('Using cached subcategories:', category.subcategories);
+    }
+  };
+
+  const handleSubcategoryClick = (subcategory) => {
+    navigate(`/products/category/${subcategory.slug}`);
+  };
+
   // Fetch categories from backend
   useEffect(() => {
-    // This would be replaced with your actual API endpoint
-    const fetchCategories = async () => {
-      try {
-        // Replace with your actual API call
-        // const response = await fetch('/api/categories');
-        // const data = await response.json();
-        // setCategories(data);
-        
-        // Mock data for now
-        setCategories([
-          {
-            id: 1,
-            name: 'Bút viết',
-            icon: 'fas fa-pen',
-            slug: 'but-viet',
-            subcategories: [
-              { id: 11, name: 'Bút bi', slug: 'but-bi' },
-              { id: 12, name: 'Bút gel', slug: 'but-gel' },
-              { id: 13, name: 'Bút mực', slug: 'but-muc' }
-            ]
-          },
-          {
-            id: 2,
-            name: 'Văn phòng phẩm',
-            icon: 'fas fa-paperclip',
-            slug: 'van-phong-pham',
-            subcategories: [
-              { id: 21, name: 'Kẹp giấy', slug: 'kep-giay' },
-              { id: 22, name: 'Ghim bấm', slug: 'ghim-bam' },
-              { id: 23, name: 'Cặp tài liệu', slug: 'cap-tai-lieu' }
-            ]
-          },
-          {
-            id: 3,
-            name: 'Dụng Cụ Học Tập',
-            icon: 'fas fa-ruler-combined',
-            slug: 'dung-cu-hoc-tap',
-            subcategories: [
-              { id: 31, name: 'Thước kẻ', slug: 'thuoc-ke' },
-              { id: 32, name: 'Compa', slug: 'compa' },
-              { id: 33, name: 'Gôm tẩy', slug: 'gom-tay' }
-            ]
-          },
-          {
-            id: 4,
-            name: 'Mỹ Thuật',
-            icon: 'fas fa-paint-brush',
-            slug: 'my-thuat',
-            subcategories: [
-              { id: 41, name: 'Màu vẽ', slug: 'mau-ve' },
-              { id: 42, name: 'Bút vẽ', slug: 'but-ve' },
-              { id: 43, name: 'Giấy vẽ', slug: 'giay-ve' }
-            ]
-          },
-          {
-            id: 5,
-            name: 'Giấy In',
-            icon: 'fas fa-copy',
-            slug: 'giay-in',
-            subcategories: [
-              { id: 51, name: 'Giấy A4', slug: 'giay-a4' },
-              { id: 52, name: 'Giấy photo', slug: 'giay-photo' },
-              { id: 53, name: 'Giấy màu', slug: 'giay-mau' }
-            ]
-          },
-          {
-            id: 6,
-            name: 'Bút cao cấp',
-            icon: 'fas fa-pen-fancy',
-            slug: 'but-cao-cap',
-            subcategories: [
-              { id: 61, name: 'Bút Parker', slug: 'but-parker' },
-              { id: 62, name: 'Bút Montblanc', slug: 'but-montblanc' },
-              { id: 63, name: 'Bút Waterman', slug: 'but-waterman' }
-            ]
-          },
-          {
-            id: 7,
-            name: 'STEAM & DIY',
-            icon: 'fas fa-tools',
-            slug: 'steam-diy',
-            subcategories: [
-              { id: 71, name: 'Đồ chơi STEAM', slug: 'do-choi-steam' },
-              { id: 72, name: 'Bộ thí nghiệm', slug: 'bo-thi-nghiem' },
-              { id: 73, name: 'Robot học tập', slug: 'robot-hoc-tap' }
-            ]
-          },
-          {
-            id: 8,
-            name: 'Sách',
-            icon: 'fas fa-book',
-            slug: 'sach',
-            subcategories: [
-              { id: 81, name: 'Sách giáo khoa', slug: 'sach-giao-khoa' },
-              { id: 82, name: 'Truyện tranh', slug: 'truyen-tranh' },
-              { id: 83, name: 'Sách tham khảo', slug: 'sach-tham-khao' }
-            ]
-          },
-          {
-            id: 9,
-            name: 'Quà tặng - Lifestyle',
-            icon: 'fas fa-gift',
-            slug: 'qua-tang',
-            subcategories: [
-              { id: 91, name: 'Quà tặng văn phòng', slug: 'qua-tang-van-phong' },
-              { id: 92, name: 'Đồ trang trí', slug: 'do-trang-tri' },
-              { id: 93, name: 'Phụ kiện lifestyle', slug: 'phu-kien-lifestyle' }
-            ]
-          }
-        ]);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching categories:', error);
-        setLoading(false);
-      }
-    };
-
-    fetchCategories();
+    setLoading(false);
   }, []);
 
   return (
@@ -230,32 +219,39 @@ const HomePage = () => {
             {loading ? (
               <div className="p-3 text-center">Đang tải danh mục...</div>
             ) : (
-              <ul className="category-list">
+              <div className="categories-list">
                 {categories.map((category) => (
-                  <li key={category.id} className="category-item">
-                    <Link to={`/category/${category.slug}`} className="category-link">
+                  <div
+                    key={category.id}
+                    className="category-item"
+                    onMouseEnter={() => handleCategoryHover(category)}
+                    onMouseLeave={() => setActiveCategory(null)}
+                  >
+                    <div className="category-main">
                       <i className={category.icon}></i>
                       <span>{category.name}</span>
-                    </Link>
-                    {category.subcategories && category.subcategories.length > 0 && (
-                      <div className="subcategory-menu">
-                        <ul className="subcategory-list">
-                          {category.subcategories.map((subcategory) => (
-                            <li key={subcategory.id} className="subcategory-item">
-                              <Link 
-                                to={`/category/${category.slug}/${subcategory.slug}`} 
-                                className="subcategory-link"
-                              >
-                                {subcategory.name}
-                              </Link>
-                            </li>
-                          ))}
-                        </ul>
+                    </div>
+                    
+                    {activeCategory && activeCategory.id === category.id && (
+                      <div className="subcategories-dropdown">
+                        {category.subcategories && category.subcategories.length > 0 ? (
+                          category.subcategories.map((sub) => (
+                            <div
+                              key={sub._id}
+                              className="subcategory-item"
+                              onClick={() => handleSubcategoryClick(sub)}
+                            >
+                              {sub.name}
+                            </div>
+                          ))
+                        ) : (
+                          <div className="subcategory-item">Loading...</div>
+                        )}
                       </div>
                     )}
-                  </li>
+                  </div>
                 ))}
-              </ul>
+              </div>
             )}
           </div>
         </aside>
