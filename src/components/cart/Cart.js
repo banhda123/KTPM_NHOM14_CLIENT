@@ -32,7 +32,46 @@ const Cart = () => {
         id: 'sp2',
         name: 'Túi 02 Ruột bút gel Platinum Preppy Long',
         image: '/placeholder-bestseller2.jpg',
-        price: 9000,
+        price: 9000,const Cart = () => {
+          const navigate = useNavigate();
+          const { cartItems, updateQuantity, removeFromCart, getSubtotal, addToCart, clearCart } = useCart();
+          
+        
+          // State for promotion code
+          const [promoCode, setPromoCode] = useState('');
+          
+          // Function to add sample products to cart for testing
+          const addSampleProducts = () => {
+            // Clear existing cart first
+            clearCart();
+            
+            // Add sample productsconst Cart = () => {
+  const navigate = useNavigate();
+  const { cartItems, updateQuantity, removeFromCart, getSubtotal, addToCart, clearCart } = useCart();
+  
+
+  // State for promotion code
+  const [promoCode, setPromoCode] = useState('');
+  
+  // Function to add sample products to cart for testing
+  const addSampleProducts = () => {
+    // Clear existing cart first
+    clearCart();
+    
+    // Add sample productsconst Cart = () => {
+  const navigate = useNavigate();
+  const { cartItems, updateQuantity, removeFromCart, getSubtotal, addToCart, clearCart } = useCart();
+  
+
+  // State for promotion code
+  const [promoCode, setPromoCode] = useState('');
+  
+  // Function to add sample products to cart for testing
+  const addSampleProducts = () => {
+    // Clear existing cart first
+    clearCart();
+    
+    // Add sample products
         quantity: 2
       },
       {
