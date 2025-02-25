@@ -16,6 +16,36 @@ cd KienTrucPhanMem_Nhom14/Client
 
 3. Cài đặt các dependency:
 ```
+2. Di chuyển vào thư mục client:
+```
+cd KienTrucPhanMem_Nhom14/Client
+```
+
+3. Cài đặt các dependency:
+2. Di chuyển vào thư mục client:
+```
+cd KienTrucPhanMem_Nhom14/Client
+```
+
+3. Cài đặt các dependency:
+2. Di chuyển vào thư mục client:
+```
+cd KienTrucPhanMem_Nhom14/Client
+```
+
+3. Cài đặt các dependency:
+2. Di chuyển vào thư mục client:
+```
+cd KienTrucPhanMem_Nhom14/Client
+```
+
+3. Cài đặt các dependency:
+2. Di chuyển vào thư mục client:
+```
+cd KienTrucPhanMem_Nhom14/Client
+```
+
+3. Cài đặt các dependency:
 npm install
 ```
 
