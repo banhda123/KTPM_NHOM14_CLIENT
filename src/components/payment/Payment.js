@@ -1,24 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Form, Button, InputGroup } from 'react-bootstrap';
-import { FaArrowLeft, FaUser, FaMapMarkerAlt, FaCreditCard, FaMoneyBillWave, FaQrcode } from 'react-icons/fa';
+import { FaArrowLeft, FaUser, FaMapMarkerAlt, FaCreditCard, FaMoneyBillWave } from 'react-icons/fa';
 import MainLayout from '../layout/MainLayout';
+import { useCart } from '../../contexts/CartContext';
 import './Payment.css';
 
 const Payment = () => {
   const navigate = useNavigate();
+  const { cartItems, getSubtotal, clearCart } = useCart();
   
-  // Sample order data - replace with actual data from cart or API
-  const [orderItems, setOrderItems] = useState([
-    {
-      id: 1,
-      name: 'Giấy kiểm tra 4 ô ly chống lóa điểm 10 dành cho học sinh cấp 1 - 4961',
-      image: '/placeholder-product1.jpg',
-      price: 15709,
-      quantity: 1,
-      weight: 300 // in grams
+  // Use cart items from context
+  const [orderItems, setOrderItems] = useState([]);
+  
+  // Load cart items when component mounts
+  useEffect(() => {
+    if (cartItems.length === 0) {
+      // Redirect to cart if there are no items
+      navigate('/cart');
+    } else {
+      // Add default weight property to cart items if not present
+      setOrderItems(cartItems.map(item => ({
+        ...item,
+        weight: item.weight || 300 // default weight in grams if not specified
+      })));
     }
-  ]);
+  }, [cartItems, navigate]);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -61,16 +68,35 @@ const Payment = () => {
   };
 
   // Handle order submission
-  const handleSubmitOrder = (e) => {
-    e.preventDefault();
+  const handleSubmitOrder = () => {
     // Implement order submission logic here
     console.log('Submitting order with data:', formData);
-    // Navigate to confirmation page or show success message
-    // navigate('/order-confirmation');
+    console.log('Order items:', orderItems);
+    
+    try {
+      // Validate form data
+      if (!formData.fullName || !formData.phone || !formData.address || !formData.province || !formData.district || !formData.ward) {
+        alert('Vui lòng điền đầy đủ thông tin giao hàng');
+        return;
+      }
+      
+      // In a real application, you would send this data to your backend
+      // For now, just show an alert and clear the cart
+      alert('Đặt hàng thành công!');
+      
+      // Clear the cart after successful order
+      clearCart();
+      
+      // Navigate to homepage or order confirmation page
+      navigate('/');
+    } catch (error) {
+      console.error('Error submitting order:', error);
+      alert('Có lỗi xảy ra khi đặt hàng. Vui lòng thử lại.');
+    }
   };
 
-  // Calculate order summary
-  const subtotal = orderItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  // Get subtotal from cart context
+  const subtotal = getSubtotal();
   const shipping = 0; // Free shipping or calculate based on address and weight
   const total = subtotal + shipping;
   const totalWeight = orderItems.reduce((sum, item) => sum + (item.weight * item.quantity), 0);
@@ -351,7 +377,6 @@ const Payment = () => {
                     variant="success" 
                     className="place-order-btn"
                     onClick={handleSubmitOrder}
-                    type="submit"
                   >
                     ĐẶT HÀNG
                   </Button>

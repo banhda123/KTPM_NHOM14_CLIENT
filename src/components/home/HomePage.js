@@ -3,9 +3,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Form, Button, Card, Carousel, Dropdown } from 'react-bootstrap';
 import './HomePage.css';
 import AuthController from '../../controllers/AuthController';
+import { useCart } from '../../contexts/CartContext';
 import axios from 'axios';
 
 const HomePage = () => {
+  const { cartCount } = useCart();
+  
   // State for categories from backend
   const [categories, setCategories] = useState([
     {
@@ -78,12 +81,10 @@ const HomePage = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const navigate = useNavigate();
 
-  // Check if user is logged in
+  // Simplified user state
   useEffect(() => {
-    const user = AuthController.getCurrentUser();
-    if (user) {
-      setCurrentUser(user);
-    }
+    // Just for demo, no actual auth
+    setCurrentUser(null);
   }, []);
 
   const handleLogout = () => {
@@ -128,7 +129,7 @@ const HomePage = () => {
   };
 
   const handleSubcategoryClick = (subcategory) => {
-    navigate(`/products/category/${subcategory.slug}`);
+    navigate(`/subcategory/${subcategory.slug}`);
   };
 
   // Fetch categories from backend
@@ -204,7 +205,7 @@ const HomePage = () => {
               <div className="cart-wrapper">
                 <Link to="/cart" className="cart-icon">
                   <i className="fas fa-shopping-cart"></i>
-                  <span className="cart-count">0</span>
+                  <span className="cart-count">{cartCount}</span>
                 </Link>
               </div>
             </Col>

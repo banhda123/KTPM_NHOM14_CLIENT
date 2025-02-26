@@ -3,26 +3,54 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Badge } from 'react-bootstrap';
 import { FaTrashAlt, FaGift, FaInfoCircle, FaShoppingBag, FaPlus, FaMinus, FaCheck } from 'react-icons/fa';
 import MainLayout from '../layout/MainLayout';
+import { useCart } from '../../contexts/CartContext';
 import './Cart.css';
 
 const Cart = () => {
   const navigate = useNavigate();
+  const { cartItems, updateQuantity, removeFromCart, getSubtotal, addToCart, clearCart } = useCart();
   
-  // Sample cart items - replace with actual data from API or state management
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 1,
-      name: 'Bộ 2 Hộp Thực Hành Toán Lớp 3 Dùng Cho Học Sinh',
-      image: '/placeholder-product1.jpg',
-      price: 185250,
-      originalPrice: 195000,
-      discount: 5,
-      quantity: 1
-    }
-  ]);
 
   // State for promotion code
   const [promoCode, setPromoCode] = useState('');
+  
+  // Function to add sample products to cart for testing
+  const addSampleProducts = () => {
+    // Clear existing cart first
+    clearCart();
+    
+    // Add sample products
+    const sampleProducts = [
+      {
+        id: 'sp1',
+        name: 'Bút gel B - Minimalist Butter Gel Thiên Long',
+        image: '/placeholder-bestseller1.jpg',
+        price: 13500,
+        quantity: 1
+      },
+      {
+        id: 'sp2',
+        name: 'Túi 02 Ruột bút gel Platinum Preppy Long',
+        image: '/placeholder-bestseller2.jpg',
+        price: 9000,
+        quantity: 2
+      },
+      {
+        id: 'sp3',
+        name: 'Cặp chống gù Điểm Tĩnh Long - Balo học sinh tiểu học',
+        image: '/placeholder-bestseller3.jpg',
+        price: 342000,
+        quantity: 1
+      }
+    ];
+    
+    // Add each product to cart
+    sampleProducts.forEach(product => {
+      addToCart(product, product.quantity);
+    });
+    
+    alert('Đã thêm sản phẩm mẫu vào giỏ hàng!');
+  };
 
   // Sample best-selling products - replace with actual data from API
   const bestSellingProducts = [
@@ -70,22 +98,16 @@ const Cart = () => {
 
   // Handle quantity change
   const handleQuantityChange = (id, delta) => {
-    setCartItems(prevItems => 
-      prevItems.map(item => 
-        item.id === id 
-        ? { ...item, quantity: Math.max(1, item.quantity + delta) } 
-        : item
-      )
-    );
+    updateQuantity(id, delta);
   };
 
   // Handle item removal
   const handleRemoveItem = (id) => {
-    setCartItems(prevItems => prevItems.filter(item => item.id !== id));
+    removeFromCart(id);
   };
 
-  // Calculate subtotal
-  const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  // Get subtotal from context
+  const subtotal = getSubtotal();
 
   // Available promotions - replace with actual data
   const promotions = [
@@ -196,6 +218,13 @@ const Cart = () => {
               </div>
               <p>Giỏ hàng của bạn đang trống</p>
               <button className="continue-shopping-btn">Tiếp tục mua sắm</button>
+              <button 
+                className="btn btn-primary" 
+                onClick={addSampleProducts}
+                style={{ marginTop: '15px', fontSize: '14px', padding: '8px 15px' }}
+              >
+                Thêm sản phẩm mẫu để test
+              </button>
             </div>
           )}
         </div>
@@ -267,7 +296,13 @@ const Cart = () => {
               <span>Tổng Số Tiền (gồm VAT)</span>
               <span className="total-amount">{subtotal.toLocaleString('vi-VN')}đ</span>
             </div>
-            <button className="checkout-btn" onClick={() => navigate('/payment')}>THANH TOÁN</button>
+            <button className="checkout-btn" onClick={() => {
+              if (cartItems.length === 0) {
+                alert('Giỏ hàng của bạn đang trống. Vui lòng thêm sản phẩm vào giỏ hàng.');
+                return;
+              }
+              navigate('/payment');
+            }}>THANH TOÁN</button>
             <p className="web-discount-note">(Giảm giá trên web chỉ áp dụng cho bán lẻ)</p>
           </div>
         </div>

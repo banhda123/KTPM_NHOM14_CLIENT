@@ -6,7 +6,7 @@ import { Container, Row, Col, Card, Button, Alert } from 'react-bootstrap';
 import { FaUser, FaLock } from 'react-icons/fa';
 import AuthController from '../../controllers/AuthController';
 import MainLayout from '../layout/MainLayout';
-import ParticlesBackground from './ParticlesBackground';
+import ParticlesBackground from './ParticlesBackground.js';
 import './Auth.css';
 
 const Login = () => {
